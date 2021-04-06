@@ -79,6 +79,13 @@ def printErrorInfor(text, color):
 	text += " | func: " + sys._getframe().f_back.f_code.co_name + ", line: " + str(sys._getframe().f_back.f_lineno)
 	printInColor(text, color)
 
+def noSpaceEnterHomeEnd(text): # 取消字符串首尾的空格和回车
+	while(text[0]==' ' or text[0]=='\n'):
+		text = text[1:]
+	while(text[-1]==' ' or text[-1]=='\n'):
+		text = text[:-1]
+	return text
+
 def exec_cmd(command):
 	print(command)
 	os.system(command)
@@ -266,7 +273,7 @@ def opendir(uid):
 	else:
 		exec_cmd('explorer "' + DIRPATH + name + '"')
 # 新建文件
-def nw(commandstr):
+def nw(commandstr, newfilename=''):
 	# 获得 new_uid
 	with open(RECORDPATH, 'r', encoding='utf-8') as f:
 		record = json.load(f)
@@ -275,7 +282,10 @@ def nw(commandstr):
 	writeSecure(json.dumps(record, ensure_ascii=False, indent='\t'), RECORDPATH)
 	# 新建文件
 	with open(MDFILEPATH + str(new_uid) + '.md', 'w', encoding='utf-8') as f:
-		f.write('untitled' + str(new_uid) + '\n')
+		if(newfilename == ''):
+			f.write('untitled' + str(new_uid) + '\n')
+		else:
+			f.write(newfilename + '\n')
 		f.write('@data: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 		f.write('\n\n@road: \n')
 		if(commandstr != ''):
@@ -302,12 +312,14 @@ def sv(uid):
 		# 在 fndict 中改名
 		del iddict.fndict[old_filename]
 		iddict.fndict[new_filename] = uid
-	# 处理 |||
-	temps = re.findall('\|\|[a-zA-Z]*\|', data)
+	# 处理 |||，若后面有字符串则作为文件名
+	temps = re.findall('\|\|[a-zA-Z]*\|[^\n]*\n', data)
 	for temp in temps:
-		tcommandstr = temp[2:-1]
-		tuid = nw(tcommandstr)
-		data = data.replace(temp, '|`' + iddict.get_pk(tuid) + '`|' + tcommandstr + '|', 1)
+		unit = re.findall('\|\|[a-zA-Z]*\|', temp)[0]
+		tcommandstr = unit[2:-1]
+		tname = noSpaceEnterHomeEnd(temp[len(unit):])
+		tuid = nw(tcommandstr, tname)
+		data = data.replace(unit, '|`' + iddict.get_pk(tuid) + '`|' + tcommandstr + '|', 1)
 	# 更改已打开的文件
 	writeSecure(data, OPENEDPATH + new_filename + '.md')
 	
