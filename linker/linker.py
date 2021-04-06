@@ -468,7 +468,12 @@ if(__name__=='__main__'):
 	
 	elif(commandsplited[0] == 'save'):
 		if(len(commandsplited)==1):
+			with open(args['file'], 'r', encoding='utf-8') as f:
+				name = f.readline()
+				if(name[-1] == '\n'):
+					name = name[:-1]
 			sv(iddict.fndict[args['fileBasenameNoExtension']])
+			os.system('code "' + OPENEDPATH + name + '.md"')
 		elif(len(commandsplited==2)):
 			sv(iddict.pkdict['pkidmap'][commandsplited[1]])
 	
