@@ -12,21 +12,21 @@ import psutil
 
 WAYTOGETCOMMAND = 'text_from_file'
 
-MDFILEPATH = 'data_user\\mdfiles\\' # 放 0.md, 1.md 的地方
-DIRPATH = 'data_user\\mddirs\\' # 放 1, 2, 3, 文件夹的地方
-OPENEDPATH = '..\\..\\mdfiles\\' # 放打开的 md 文件的地方
-TEMPPATH = 'data_source\\.temp\\' # 放 temp 文件的地方
+MDFILEPATH = 'linker\\data_user\\mdfiles\\' # 放 0.md, 1.md 的地方
+DIRPATH = 'linker\\data_user\\mddirs\\' # 放 1, 2, 3, 文件夹的地方
+OPENEDPATH = 'mdfiles\\' # 放打开的 md 文件的地方
+TEMPPATH = 'linker\\data_source\\.temp\\' # 放 temp 文件的地方
 
-PKPATH = 'data_source\\maps\\pk.json' # 放 id 与 pk 的映射表
-FNPATH = 'data_source\\maps\\fn.json' # 放 id 与 filename 的映射表
-DNPATH = 'data_source\\maps\\dn.json' # 放 id 与 dirname 的映射表
+PKPATH = 'linker\\data_source\\maps\\pk.json' # 放 id 与 pk 的映射表
+FNPATH = 'linker\\data_source\\maps\\fn.json' # 放 id 与 filename 的映射表
+DNPATH = 'linker\\data_source\\maps\\dn.json' # 放 id 与 dirname 的映射表
 
-RECORDPATH = 'core\\record.json' # 放 nextid 之类的
+RECORDPATH = 'linker\\core\\record.json' # 放 nextid 之类的
 
-TASK_TEMP_PATH = 'data_source\\tasks.json'
-TASKS_PATH = '..\\..\\.vscode\\tasks.json'
+TASK_TEMP_PATH = 'linker\\data_source\\tasks.json'
+TASKS_PATH = '.vscode\\tasks.json'
 
-BACKUPPATH = 'data_source\\.backup\\'
+BACKUPPATH = 'linker\\data_source\\.backup\\'
 
 
 assert len(sys.argv) == 13

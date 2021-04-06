@@ -14,7 +14,7 @@
 			"request": "launch",
 			"program": "linker.py",
 			"console": "integratedTerminal",
-			"cwd": "${fileWorkspaceFolder}\\tools\\linker\\",
+			"cwd": "${workspaceFolder}",
 			//"postDebugTask": "${defaultBuildTask}",
 			"args": [
 				"${workspaceFolder}", 			//	/home/your-username/your-project
