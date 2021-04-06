@@ -1,0 +1,10 @@
+*.md
+!README.md
+
+.vscode/*
+*.json
+!.vscode/launch.json
+
+test/*
+
+*temp*
