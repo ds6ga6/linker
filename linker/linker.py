@@ -80,14 +80,8 @@ def printErrorInfor(text, color):
 	printInColor(text, color)
 
 def exec_cmd(command):
-	if(command.split(' ', 1)[0] == 'start' or command == ''):
-		with open(TASK_TEMP_PATH, 'r', encoding='utf-8') as f:
-			task_data = json.load(f)
-		task_data['tasks'][0]["command"] = command
-		with open(TASKS_PATH, "w", encoding='utf-8') as f:
-			json.dump(task_data, f, ensure_ascii=False, indent='\t')
-	else:
-		os.system(command)
+	print(command)
+	os.system(command)
 	
 
 class IDDICT():
@@ -437,9 +431,6 @@ def allreset():
 
 
 if(__name__=='__main__'):
-	# 清空 tasks.json
-	exec_cmd('')
-
 	# 得到 command
 	if(WAYTOGETCOMMAND == 'text_from_file'):
 		with open(args['file'], 'r', encoding='utf-8') as f:
