@@ -479,7 +479,7 @@ if(__name__=='__main__'):
 		if(len(commandsplited)==1):
 			sv(iddict.fndict[args['fileBasenameNoExtension']])
 		elif(len(commandsplited==2)):
-			save(iddict.pkdict['pkidmap'][commandsplited[1]])
+			sv(iddict.pkdict['pkidmap'][commandsplited[1]])
 	
 	elif(re.match('[a-z][a-z]$', commandsplited[0])):
 		if(len(commandsplited) == 1): # 移到 md
