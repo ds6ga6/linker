@@ -17,7 +17,7 @@ DIRPATH = 'linker\\data_user\\mddirs\\' # 放 1, 2, 3, 文件夹的地方
 OPENEDPATH = 'mdfiles\\' # 放打开的 md 文件的地方
 TEMPPATH = 'linker\\data_source\\.temp\\' # 放 temp 文件的地方
 
-PKPATH = 'linker\\data_source\\maps\\pk.json' # 放 id 与 pk 的映射表
+QKPATH = 'linker\\data_source\\maps\\qk.json' # 放 id 与 qk 的映射表
 FNPATH = 'linker\\data_source\\maps\\fn.json' # 放 id 与 filename 的映射表
 DNPATH = 'linker\\data_source\\maps\\dn.json' # 放 id 与 dirname 的映射表
 
@@ -93,7 +93,7 @@ def exec_cmd(command):
 
 class IDDICT():
 	def __init__(self):
-		self.pkload = PKPATH
+		self.qkload = QKPATH
 		self.fnload = FNPATH
 		self.dnload = DNPATH
 		self.readfile()
@@ -101,25 +101,25 @@ class IDDICT():
 		self.writefile()
 		print("已成功保存结果。")
 
-	# 初始化 pk 文件
-	def init_pk(self):
-		pkset =  set()
+	# 初始化 qk 文件
+	def init_qk(self):
+		qkset =  set()
 		for i in range(0, 26):
 			for j in range(0, 26):
-				pkch = chr(ord('a') + i) + chr(ord('a') + j)
-				pkset.add(pkch)
-		self.pkdict = {
-			"unusedpk": list(pkset),
-			"pkidmap": {}
+				qkch = chr(ord('a') + i) + chr(ord('a') + j)
+				qkset.add(qkch)
+		self.qkdict = {
+			"unusedqk": list(qkset),
+			"qkidmap": {}
 		}
-	# 把 pk, fn 文件中的内容读到 self.pkdict, self.fndict
+	# 把 qk, fn 文件中的内容读到 self.qkdict, self.fndict
 	def readfile(self):
-		# 读 pk.json
-		if(os.path.exists(self.pkload)):
-			with open(self.pkload, 'r') as f:
-				self.pkdict = json.load(f)
+		# 读 qk.json
+		if(os.path.exists(self.qkload)):
+			with open(self.qkload, 'r') as f:
+				self.qkdict = json.load(f)
 		else:
-			self.init_pk()
+			self.init_qk()
 		# 读 fn.json
 		if(os.path.exists(self.fnload)):
 			with open(self.fnload, 'r', encoding='utf-8') as f:
@@ -132,45 +132,45 @@ class IDDICT():
 				self.dndict = json.load(f)
 		else:
 			self.dndict = {}
-	# 把 self.pkdict, self.fndict 保存到 pk 文件中
+	# 把 self.qkdict, self.fndict 保存到 qk 文件中
 	def writefile(self):
-		text = json.dumps(self.pkdict, indent='\t')
-		writeSecure(text, self.pkload)
+		text = json.dumps(self.qkdict, indent='\t')
+		writeSecure(text, self.qkload)
 		text = json.dumps(self.fndict, indent='\t', ensure_ascii=False)
 		writeSecure(text, self.fnload)
 		text = json.dumps(self.dndict, indent='\t', ensure_ascii=False)
 		writeSecure(text, self.dnload)
-	# 分配出一个 pk，并更新列表
-	def get_pk(self, uid):
-		if(uid in self.pkdict['pkidmap'].values()): # pk 列表中有对应的 uid
-			return dictGetKey(self.pkdict['pkidmap'], uid)
+	# 分配出一个 qk，并更新列表
+	def get_qk(self, uid):
+		if(uid in self.qkdict['qkidmap'].values()): # qk 列表中有对应的 uid
+			return dictGetKey(self.qkdict['qkidmap'], uid)
 		else:
-			if(len(self.pkdict['unusedpk']) == 0): # pk没有了，遍历打开的文件，把没用的都删掉
-				old_pkidmap = self.pkdict['pkidmap']
-				init_pk()
-				new_pkset = set(self.pkdict['unusedpk'])
+			if(len(self.qkdict['unusedqk']) == 0): # qk没有了，遍历打开的文件，把没用的都删掉
+				old_qkidmap = self.qkdict['qkidmap']
+				init_qk()
+				new_qkset = set(self.qkdict['unusedqk'])
 				for filename in self.fndict.keys():
 					with open(OPENEDPATH + filename + '.md', 'r', encoding='utf-8') as f:
-						pkunits = re.findall('\|`[a-z][a-z]`\|', f.read())
-					for pkunit in pkunits:
-						pkunit = pkunit[2:-2]
-						if(pkunit in new_pkset):
-							new_pkset -= pkunit
-							self.pkdict['pkidmap'][pkunit] = old_pkidmap[pkunit]
-				self.pkdict['unusedpk'] = list(new_pkset)
-				printInColor("pk overflow. please run the command again", "blue")
+						qkunits = re.findall('\|`[a-z][a-z]`\|', f.read())
+					for qkunit in qkunits:
+						qkunit = qkunit[2:-2]
+						if(qkunit in new_qkset):
+							new_qkset -= qkunit
+							self.qkdict['qkidmap'][qkunit] = old_qkidmap[qkunit]
+				self.qkdict['unusedqk'] = list(new_qkset)
+				printInColor("qk overflow. please run the command again", "blue")
 				exit(0) # 因为更新了，又没法自动重新开始（没有goto），干脆让用户重运行次命令
 			else:
-				pkunit = random.choice(self.pkdict['unusedpk']) # 随机抽取 pk
-				pkset = set(self.pkdict['unusedpk']) - set(pkunit) # 更新没使用的 pk 列表
-				self.pkdict['unusedpk'] = list(pkset)
-				self.pkdict['pkidmap'][pkunit] = uid
-				return pkunit
+				qkunit = random.choice(self.qkdict['unusedqk']) # 随机抽取 qk
+				qkset = set(self.qkdict['unusedqk']) - set(qkunit) # 更新没使用的 qk 列表
+				self.qkdict['unusedqk'] = list(qkset)
+				self.qkdict['qkidmap'][qkunit] = uid
+				return qkunit
 
 iddict = IDDICT()
 
-# pkstr: "|`pk`|commandstr|"
-def uid_to_pkstr(uid):
+# qkstr: "|`qk`|commandstr|"
+def uid_to_qkstr(uid):
 	# 得到 commandstr
 	with open(MDFILEPATH + str(uid) + '.md', 'r', encoding='utf-8') as f:
 		commandstr = re.findall("\n@commands: [^\n]*\n", f.read())
@@ -178,9 +178,9 @@ def uid_to_pkstr(uid):
 		commandstr = ""
 	else:
 		commandstr = commandstr[0][len('\n@commands: '):-1]
-	# 得到 pk
-	pkunit = iddict.get_pk(uid)
-	return "|`" + pkunit + "`|" + commandstr + "|"
+	# 得到 qk
+	qkunit = iddict.get_qk(uid)
+	return "|`" + qkunit + "`|" + commandstr + "|"
 # name: 就是 id.md 文件首行的内容
 def uid_to_name(uid):
 	with open(MDFILEPATH + str(uid) + '.md', 'r', encoding='utf-8') as f:
@@ -219,24 +219,24 @@ def op(uid, loadfile):
 		# printInColor("This file is exist", "red")
 		exec_cmd('code ' + '"' + OPENEDPATH + filename + '.md' + '"')
 		return
-	# 更改 |`id`|| 为 |`pk`||
+	# 更改 |`id`|| 为 |`qk`||
 	for uidstr in re.findall('\\|`\\d+`\\|', data):
 		subuid = int(uidstr[2:-2])
-		data = data.replace(uidstr, uid_to_pkstr(subuid))
+		data = data.replace(uidstr, uid_to_qkstr(subuid))
 	# 更改 road
 	if(os.path.exists(loadfile)):
 		with open(loadfile, 'r', encoding='utf-8') as f:
 			oldroad = re.findall('\n@road: [^\n]*\n', f.read())
-			temp = '|`' + iddict.get_pk(uid) + '`|'
+			temp = '|`' + iddict.get_qk(uid) + '`|'
 			if(oldroad == []):
-				newload = "\n@road: " + uid_to_pkstr(uid) + filename + '\n'
+				newload = "\n@road: " + uid_to_qkstr(uid) + filename + '\n'
 			elif(temp in oldroad[0]): # 返回的是上级目录
-				newload = re.sub(temp.replace('|', '\|') + "[^\n]*\n", uid_to_pkstr(uid) + filename, oldroad[0]) + '\n'
+				newload = re.sub(temp.replace('|', '\|') + "[^\n]*\n", uid_to_qkstr(uid) + filename, oldroad[0]) + '\n'
 			else:
 				oldroad = oldroad[0][:-1]
 				if(len(oldroad) >= len("\n@road: ")):
 					oldroad += " -> "
-				newload = oldroad + uid_to_pkstr(uid) + filename + '\n'
+				newload = oldroad + uid_to_qkstr(uid) + filename + '\n'
 	data = data.replace("\n@road: ", newload)
 	# 在 0.md 中登记
 	temp = '[](' + filename + '.md)'
@@ -319,16 +319,16 @@ def sv(uid):
 		tcommandstr = unit[2:-1]
 		tname = noSpaceEnterHomeEnd(temp[len(unit):])
 		tuid = nw(tcommandstr, tname)
-		data = data.replace(unit, '|`' + iddict.get_pk(tuid) + '`|' + tcommandstr + '|', 1)
+		data = data.replace(unit, '|`' + iddict.get_qk(tuid) + '`|' + tcommandstr + '|', 1)
 	# 更改已打开的文件
 	writeSecure(data, OPENEDPATH + new_filename + '.md')
 	
 	# 处理 @road
 	data = re.sub('@road: [^\n]*\n', '@road: ', data)
-	# 把 pk 还原为 id
+	# 把 qk 还原为 id
 	temps = re.findall('\|`[a-z][a-z]`\|[a-zA-Z]*\|', data)
 	for temp in temps:
-		tuid = iddict.pkdict['pkidmap'][temp[2:4]]
+		tuid = iddict.qkdict['qkidmap'][temp[2:4]]
 		ntemp = '|`' + str(tuid) + '`|'
 		data = data.replace(temp, ntemp)
 	# 同步到 id.md
@@ -414,7 +414,7 @@ def reset():
 				+ "Because" + DIRPATH + dirname + "isn't exists already", "blue")
 		print("rename " + dirname)
 	# 初始化 maps
-	iddict.init_pk()
+	iddict.init_qk()
 	iddict.fndict = {}
 	iddict.dndict = {}
 # 这会初始化所有文件，仅在调试时使用
@@ -474,7 +474,7 @@ if(__name__=='__main__'):
 		if(len(commandsplited)==1):
 			op(0, args['file'])
 		elif(len(commandsplited)==2):
-			op(iddict.pkdict['pkidmap'][commandsplited[1]], args['file'])
+			op(iddict.qkdict['qkidmap'][commandsplited[1]], args['file'])
 		else:
 			isfinish = False
 	
@@ -487,16 +487,16 @@ if(__name__=='__main__'):
 			sv(iddict.fndict[args['fileBasenameNoExtension']])
 			os.system('code "' + OPENEDPATH + name + '.md"')
 		elif(len(commandsplited==2)):
-			sv(iddict.pkdict['pkidmap'][commandsplited[1]])
+			sv(iddict.qkdict['qkidmap'][commandsplited[1]])
 	
 	elif(re.match('[a-z][a-z]$', commandsplited[0])):
 		if(len(commandsplited) == 1): # 移到 md
-			gt(iddict.pkdict['pkidmap'][commandsplited[0]], args['file'])
-		elif(len(commandsplited) == 2): # 调用 pk 的 commandspliteds
-			if(commandsplited[1] == 'D'): # 打开 pk 对应的文件夹
-				opendir(iddict.pkdict['pkidmap'][commandsplited[0]])
+			gt(iddict.qkdict['qkidmap'][commandsplited[0]], args['file'])
+		elif(len(commandsplited) == 2): # 调用 qk 的 commandspliteds
+			if(commandsplited[1] == 'D'): # 打开 qk 对应的文件夹
+				opendir(iddict.qkdict['qkidmap'][commandsplited[0]])
 			elif(re.match("[a-z]$", commandsplited[1])):
-				exe_command(iddict.pkdict['pkidmap'][commandsplited[0]], commandsplited[1])
+				exe_command(iddict.qkdict['qkidmap'][commandsplited[0]], commandsplited[1])
 			else:
 				isfinish = False
 		else:
