@@ -80,9 +80,9 @@ def printErrorInfor(text, color):
 	printInColor(text, color)
 
 def noSpaceEnterHomeEnd(text): # 取消字符串首尾的空格和回车
-	while(text[0]==' ' or text[0]=='\n'):
+	while(text != '' and (text[0]==' ' or text[0]=='\n')):
 		text = text[1:]
-	while(text[-1]==' ' or text[-1]=='\n'):
+	while(text != '' and (text[-1]==' ' or text[-1]=='\n')):
 		text = text[:-1]
 	return text
 
