@@ -12,7 +12,7 @@
 			"name": "Python: linker",
 			"type": "python",
 			"request": "launch",
-			"program": "linker.py",
+			"program": "linker\\linker.py",
 			"console": "integratedTerminal",
 			"cwd": "${workspaceFolder}",
 			//"postDebugTask": "${defaultBuildTask}",
